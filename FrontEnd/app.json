@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "carpoling_v2",
+    "slug": "carpoling_v2",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+    
+  },
+  "name": "carpoling_v2"
+  
+}
