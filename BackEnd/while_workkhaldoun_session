@@ -1,0 +1,209 @@
+
+// to create  a laravel project that depend on laravel 8.0
+
+composer create-project laravel/laravel="8.0" laravel-demo
+
+// laravel steps //
+
+steps to follow in laravel : Migrations -> Model -> Controller ->routes
+
+// php artisan//
+
+1- you should create a database in MySql
+
+php artisan is a way to write commands that serve me while working on laravel
+
+to catch all command write php artisan in your terminal
+
+
+//React Native : php artisan serve --host=192.168.43.57 --port=8000
+
+// create migration and blog table inside it  //
+
+php artisan make:migration create_blogs_table
+
+
+// to add column to the table//
+
+inside your table function add :
+
+ $table->typeofdata('ColumnName')
+
+// to apply and update your migration data in phpmyAdmin//
+
+php artisan migrate
+
+//to create model to the blog table
+
+php artisan make:model Blogs
+
+the idea behind the model is to connect our blog table to the database
+
+
+// to create controller in laravel //
+
+php artisan make:controller BlogsController
+
+
+//after creation controller add this test function inside the class // 
+  
+  public function store(request $request){
+       
+        dd($request); 
+    }
+
+// in our api.php file inside routes folder add a new routing //
+
+Route::post('/blogs',[\App\Http\Controllers\BlogsController::class,'store']);
+
+
+//To start our php project //
+php artisan serve
+
+
+// go to postman create new request and add stuff to header and body as khaldoun did //
+
+
+
+
+// to add value our table form controller we add the following code //
+
+        $blog=new Blogs();
+        $blog->title = $request->title;  
+        $blog->overview= $request->overview;
+        $blog->save();
+
+
+        React Native:
+        php artisan serve --host=192.168.137.206 --port=8000
+
+// the second method of doing this is as the following : //
+
+
+Notes guide:
+
+=> : when we have code
+== explanation code == : when we explain code 
+[[ additional info :]] : when we have extra code or extra informations
+
+
+first go to model part (Blogs in our case) and then add all the column you want to
+fill  via postman in this way =>
+
+    protected $fillable = [
+        'title', 'overview', 
+    ];
+
+second go back to controller part (BlogsController) and fill the column like this =>
+
+
+        $blog = new Blogs();
+        $blog->fill(
+         $request->all()
+        );
+                                                                                            
+        $blog->save();
+
+       
+== explanation code ==
+      
+$blog->fill(  $request->all());
+
+it's mean take all waht inside blogs (the variable blog contain our Blogs model that conatain our colomuns that we add before using protected $fillable ) and fill it with all what we will recive from postman as request (the variable that we add in the body in postman)                                  
+
+
+
+
+[[ additional info :]]
+dd() ; is stand for dump and die , it's like when you do  print_r($blog); and then die
+
+so it will work and then stop => so everything after dd will not work 
+
+
+
+
+to select all data from blogs  we can use the following code =>
+
+// create select function 
+
+ public function index()
+    {
+      return Blogs::all();
+    }
+
+
+then don't forget to add the route before calling it via postman =>
+
+Route::get('/blogs',[\App\Http\Controllers\BlogsController::class,'index']);
+
+
+
+to select specific things from blogs  we can use the following code =>
+
+    public function index()
+    {
+      return Blogs
+      ::where('title','bachir')->get();
+    }
+
+
+[[ additional info :]]
+
+we can add orderBy also =>  return Blogs::where('title','bachir')->orderBy('title')->get();
+
+[[ additional info :]]
+
+to use sql DB::raw(); or something similar [ check laravel documentation but sql is not  a secure way];
+
+
+to update we can use this code =>
+
+    public function update(Request $request,$id)
+    {
+        $blog = Blogs::where('id',$id)->first();//first select a specific element
+        $blog->update($request->all());   // second update it 
+    }
+
+
+the route will be like this =>
+
+Route::put('/blogs/{id}',[\App\Http\Controllers\BlogsController::class,'update']);
+
+url in postman will be like this => localhost:8000/api/blogs/1
+
+
+
+to delete we can use this code =>
+
+    public function destroy($id)
+    {
+         Blogs::where('id',$id)->delete();
+    }
+
+the route will be like this =>
+
+Route::delete('/blogs/{id}',[\App\Http\Controllers\BlogsController::class,'destroy']);
+
+
+[[ additional info :]]
+to see what routes i have i can write : php artisan route:list .
+
+you can summorise all your route line by just the single following line =>
+
+Route::resource('blogs','\App\Http\Controllers\BlogsController');
+
+== explanation code ==
+this code contain two place once is for route name and second for the controller path
+and all cruds operations will done by build in way.
+
+[[ additional info :]]
+if we want to go back one step in migration we use this line : 
+php artisan migrate:rollback 
+
+[[ additional info :]]
+you can create new app key via artisan  like this  php artisan key:generate
+
+app key is like identifier to any project and a way to protect your project.
+
+
+finished.
